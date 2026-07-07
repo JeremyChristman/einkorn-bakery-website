@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ============================================================================
+  EINKORN BAKERY WEBSITE — single-file, zero-dependency mockup
+  ============================================================================
+  TABLE OF CONTENTS
+    1. <head>       — meta, favicon (inline SVG data URI), JSON-LD, styles
+    2. Styles       — design tokens first (:root), then base, then per-section
+    3. Header/nav   — sticky, mobile toggle (works without JS: nav stays open)
+    4. Hero         — dual CTA (sell path + educate path)
+    5. Our Story    — Will, the baker
+    6. Why Einkorn  — education: history, what changed, nutrition, disclaimer
+    7. Pull quote   — dark band
+    8. The Breads   — product cards (photo-ready 4:3 media slots) + gluten note
+    9. How to Order — no POS; 3 steps + contact placeholders
+   10. FAQ          — native <details>/<summary>, no JS required
+   11. Footer       — cottage-food disclosure placeholder, contact, copyright
+   12. Script       — progressive enhancement only (nav toggle, scroll reveal)
+
+  RENAMING THE BAKERY
+    The brand name is the exact, case-sensitive string "Ancient Grains". It
+    appears ONLY in human-visible text and metadata, plus twice in this very
+    comment — never in class names, IDs, anchors, or CSS. To rename: do a
+    case-sensitive find-and-replace of "Ancient Grains" across this file
+    (the README lists the exact occurrence count), then re-read the <title>
+    and meta description so they still read naturally.
+
+  PLACEHOLDERS TO REPLACE BEFORE LAUNCH (all marked "placeholder" nearby):
+    - hello@example.com          (order email)
+    - (860) 555-0134             (phone; 555 numbers are fictional)
+    - @yourbakeryhandle          (Instagram)
+    - Hartford County, Connecticut (pickup area)
+    - Fridays                    (bake day)
+    - All prices on the bread cards
+    - Cottage-food footer statement: verify current CT DCP wording
+  ============================================================================
+-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ancient Grains — 100% Einkorn Sourdough Bakery in Connecticut</title>
+  <meta name="description" content="Ancient Grains is a small-batch home bakery in Connecticut baking sourdough and pastries with 100% einkorn, the world's oldest wheat — and teaching why it matters.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 30V12' stroke='%238A5A14' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 13c-5 0-7-3-7-7 4 0 7 2 7 7Zm0 0c5 0 7-3 7-7-4 0-7 2-7 7Zm0-6c-4 0-6-3-6-6 4 0 6 2 6 6Zm0 0c4 0 6-3 6-6-4 0-6 2-6 6Z' fill='%23D9A441'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Bakery",
+    "name": "Ancient Grains",
+    "description": "Home bakery specializing in 100% einkorn sourdough bread and pastries.",
+    "servesCuisine": "Bakery",
+    "address": { "@type": "PostalAddress", "addressRegion": "CT", "addressCountry": "US" }
+  }
+  </script>
+  <style>
+    /* ============ 1. DESIGN TOKENS — retheme the whole site here ============ */
+    :root {
+      /* color */
+      --cream:      #FAF6EF;   /* page background */
+      --flour:      #F1E8D8;   /* alternate section background */
+      --ink:        #2B1D12;   /* primary text, dark band background */
+      --ink-soft:   #5C4A38;   /* secondary text */
+      --gold:       #D9A441;   /* decorative accent (illustrations, dark-band text) */
+      --gold-deep:  #8A5A14;   /* accent that must pass AA on light backgrounds */
+      --crust:      #8C3F1D;   /* warnings / warm emphasis */
+      --line:       #E2D5BE;   /* hairline borders */
+      --cream-soft: #E8DCC8;   /* muted text on dark band */
+      /* type */
+      --font-display: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      /* scale + rhythm */
+      --step-5: clamp(2.5rem, 1.5rem + 4.5vw, 4.25rem);   /* h1 */
+      --step-4: clamp(1.9rem, 1.3rem + 2.6vw, 2.9rem);    /* h2 */
+      --step-3: clamp(1.35rem, 1.15rem + 0.9vw, 1.7rem);  /* h3 */
+      --step-1: clamp(1.05rem, 1rem + 0.25vw, 1.15rem);   /* body */
+      --step-0: 0.95rem;                                   /* small */
+      --space-section: clamp(4rem, 9vw, 7.5rem);
+      --container: 71rem;
+      --radius: 14px;
+    }
+
+    /* ============ 2. BASE ============ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-padding-top: 5.5rem; }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+    body {
+      font-family: var(--font-body);
+      font-size: var(--step-1);
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--cream);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.12; letter-spacing: -0.01em; }
+    h1 { font-size: var(--step-5); }
+    h2 { font-size: var(--step-4); }
+    h3 { font-size: var(--step-3); }
+    p  { max-width: 62ch; }
+    a  { color: var(--gold-deep); }
+    a:hover { color: var(--crust); }
+    img, svg { max-width: 100%; height: auto; display: block; }
+    :focus-visible { outline: 3px solid var(--gold-deep); outline-offset: 3px; border-radius: 2px; }
+    ::selection { background: var(--gold); color: var(--ink); }
+
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+    }
+    .container { max-width: var(--container); margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+    .section { padding-block: var(--space-section); }
+    .section-alt { background: var(--flour); }
+    .eyebrow {
+      display: inline-block; font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-deep);
+      margin-bottom: 1rem;
+    }
+    .lede { font-size: var(--step-3); font-family: var(--font-display); color: var(--ink-soft); line-height: 1.45; }
+
+    .skip-link {
+      position: absolute; left: 1rem; top: -4rem; z-index: 100;
+      background: var(--ink); color: var(--cream); padding: 0.7rem 1.2rem;
+      border-radius: 0 0 var(--radius) var(--radius); text-decoration: none;
+      transition: top 0.15s ease;
+    }
+    .skip-link:focus { top: 0; color: var(--cream); }
+
+    /* buttons */
+    .btn {
+      display: inline-block; padding: 0.85rem 1.7rem; border-radius: 999px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      border: 2px solid var(--ink); transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--ink); color: var(--cream); }
+    .btn-primary:hover { background: var(--crust); border-color: var(--crust); color: var(--cream); }
+    .btn-ghost { background: transparent; color: var(--ink); }
+    .btn-ghost:hover { background: var(--ink); color: var(--cream); }
+
+    /* ============ 3. HEADER / NAV ============ */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--cream) 88%, transparent);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    @supports not (background: color-mix(in srgb, red 50%, blue)) {
+      .site-header { background: var(--cream); }
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.9rem; }
+    .wordmark {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: var(--font-display); font-size: 1.35rem; font-weight: 700;
+      color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+    }
+    .wordmark svg { width: 1.6rem; height: 1.6rem; flex: none; }
+    .nav-toggle {
+      display: none; background: none; border: 2px solid var(--ink); border-radius: 8px;
+      padding: 0.45rem 0.6rem; cursor: pointer; color: var(--ink); line-height: 0;
+    }
+    .nav-links { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); list-style: none; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.98rem; }
+    .nav-links a:hover { color: var(--gold-deep); }
+    .nav-links .nav-cta { border: 2px solid var(--ink); border-radius: 999px; padding: 0.45rem 1.1rem; }
+    .nav-links .nav-cta:hover { background: var(--ink); color: var(--cream); }
+
+    @media (max-width: 46em) {
+      .nav-links {
+        position: absolute; left: 0; right: 0; top: 100%;
+        flex-direction: column; align-items: stretch; gap: 0;
+        background: var(--cream); border-bottom: 1px solid var(--line);
+        padding: 0.5rem 1.25rem 1.25rem;
+      }
+      .nav-links a { display: block; padding: 0.8rem 0.25rem; }
+      .nav-links .nav-cta { text-align: center; margin-top: 0.5rem; }
+      /* JS enhancement: collapse the menu behind the toggle. Without JS the
+         menu simply stays open — navigation always reachable. */
+      .js .nav-toggle { display: inline-block; }
+      .js .nav-links { display: none; }
+      .js .nav-links.open { display: flex; }
+    }
+
+    /* ============ 4. HERO ============ */
+    .hero { padding-block: clamp(3.5rem, 8vw, 6.5rem); overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+    .hero h1 { margin-bottom: 1.25rem; }
+    .hero .lede { margin-bottom: 2rem; }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-bottom: 2.25rem; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; list-style: none; }
+    .hero-badges li {
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.05em;
+      border: 1.5px solid var(--line); border-radius: 999px; padding: 0.35rem 0.9rem;
+      color: var(--ink-soft); background: var(--flour);
+    }
+    .hero-art { color: var(--gold-deep); }
+    @media (max-width: 52em) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-art { max-width: 17rem; margin-inline: auto; }
+    }
+
+    /* ============ 5/6. STORY + WHY EINKORN ============ */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+    @media (max-width: 52em) { .split { grid-template-columns: 1fr; } .split-art { max-width: 15rem; margin-inline: auto; } }
+    .split-art { color: var(--gold-deep); }
+    .split h2 { margin-bottom: 1rem; }
+    .section-head { max-width: 46rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+    .section-head h2 { margin-bottom: 0.9rem; }
+    .prose > p + p { margin-top: 1rem; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.4rem; }
+    .info-card {
+      background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+    }
+    .info-card svg { width: 2.4rem; height: 2.4rem; color: var(--gold-deep); margin-bottom: 1rem; }
+    .info-card h3 { font-size: 1.25rem; margin-bottom: 0.6rem; }
+    .info-card p { font-size: var(--step-0); color: var(--ink-soft); }
+
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.4rem; margin-top: clamp(2rem, 5vw, 3rem); }
+    .fact {
+      border-left: 3px solid var(--gold); padding: 0.35rem 0 0.35rem 1.15rem;
+    }
+    .fact h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+    .fact p { font-size: var(--step-0); color: var(--ink-soft); }
+    .fine-print { font-size: 0.85rem; color: var(--ink-soft); margin-top: 1.75rem; max-width: 62ch; }
+
+    .honest-box {
+      margin-top: clamp(2.5rem, 5vw, 3.5rem);
+      border: 2px solid var(--crust); border-radius: var(--radius);
+      background: var(--cream); padding: 1.75rem 1.75rem;
+      display: flex; gap: 1.25rem; align-items: flex-start;
+    }
+    .honest-box svg { width: 2.2rem; height: 2.2rem; flex: none; color: var(--crust); margin-top: 0.2rem; }
+    .honest-box h3 { color: var(--crust); font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .honest-box p { font-size: var(--step-0); }
+    @media (max-width: 40em) { .honest-box { flex-direction: column; } }
+
+    /* ============ 7. PULL QUOTE BAND ============ */
+    .quote-band { background: var(--ink); color: var(--cream); padding-block: clamp(4rem, 8vw, 6rem); }
+    .quote-band blockquote p {
+      font-family: var(--font-display); font-size: var(--step-4); line-height: 1.25;
+      max-width: 24ch; margin-inline: auto; text-align: center; color: var(--cream);
+    }
+    .quote-band blockquote p strong { color: var(--gold); font-weight: inherit; }
+    .quote-band cite {
+      display: block; text-align: center; margin-top: 1.75rem; font-style: normal;
+      font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream-soft);
+    }
+
+    /* ============ 8. BREADS ============ */
+    .bread-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 1.6rem; }
+    .bread-card {
+      background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius);
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .bread-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(43, 29, 18, 0.1); }
+    /* Photo-ready media slot: fixed 4:3. To use real photos later, replace the
+       inner SVG with <img src="..." alt="..."> — the layout will not move. */
+    .card-media {
+      aspect-ratio: 4 / 3; background: var(--flour);
+      display: grid; place-items: center; border-bottom: 1px solid var(--line);
+      color: var(--gold-deep);
+    }
+    .card-media svg { width: 55%; height: 55%; }
+    .card-body { padding: 1.4rem 1.4rem 1.6rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; }
+    .card-tag {
+      align-self: flex-start; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold-deep);
+      border: 1.5px solid var(--gold); border-radius: 999px; padding: 0.15rem 0.7rem;
+    }
+    .card-body h3 { font-size: 1.3rem; }
+    .card-body p { font-size: var(--step-0); color: var(--ink-soft); flex: 1; }
+    .card-price { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+    .menu-note { margin-top: 2rem; font-size: var(--step-0); color: var(--ink-soft); }
+
+    .gluten-strip {
+      margin-top: clamp(2.5rem, 5vw, 3.5rem);
+      background: var(--flour); border: 2px solid var(--crust); border-radius: var(--radius);
+      padding: 1.4rem 1.6rem; display: flex; gap: 1rem; align-items: center;
+    }
+    .gluten-strip svg { width: 1.9rem; height: 1.9rem; flex: none; color: var(--crust); }
+    .gluten-strip p { font-size: var(--step-0); max-width: none; }
+    .gluten-strip strong { color: var(--crust); }
+
+    /* ============ 9. ORDER ============ */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.4rem; counter-reset: step; }
+    .step { background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.75rem 1.5rem; }
+    .step::before {
+      counter-increment: step; content: counter(step, decimal-leading-zero);
+      display: block; font-family: var(--font-display); font-size: 2.2rem; font-weight: 700;
+      color: var(--gold-deep); line-height: 1; margin-bottom: 0.9rem;
+    }
+    .step h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .step p { font-size: var(--step-0); color: var(--ink-soft); }
+    .contact-block {
+      margin-top: clamp(2.5rem, 5vw, 3.5rem); text-align: center;
+      background: var(--ink); color: var(--cream); border-radius: var(--radius);
+      padding: clamp(2rem, 5vw, 3.5rem);
+    }
+    .contact-block h3 { font-size: var(--step-3); margin-bottom: 0.75rem; color: var(--cream); }
+    .contact-block p { margin-inline: auto; color: var(--cream-soft); font-size: var(--step-0); }
+    .contact-lines { margin-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 2.2rem; list-style: none; }
+    .contact-lines a { color: var(--gold); font-weight: 600; text-decoration: none; }
+    .contact-lines a:hover { text-decoration: underline; color: var(--gold); }
+
+    /* ============ 10. FAQ ============ */
+    .faq-list { max-width: 46rem; }
+    .faq-list details { border-bottom: 1px solid var(--line); }
+    .faq-list summary {
+      cursor: pointer; padding: 1.2rem 0.25rem; font-weight: 600; font-size: 1.05rem;
+      list-style-position: outside; display: flex; align-items: baseline; gap: 0.75rem;
+    }
+    .faq-list summary::marker { color: var(--gold-deep); }
+    .faq-list summary:hover { color: var(--gold-deep); }
+    .faq-list details p { padding: 0 1.5rem 1.3rem; color: var(--ink-soft); font-size: var(--step-0); }
+
+    /* ============ 11. FOOTER ============ */
+    .site-footer { background: var(--ink); color: var(--cream-soft); padding-block: clamp(3rem, 6vw, 4.5rem) 2rem; font-size: var(--step-0); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
+    @media (max-width: 46em) { .footer-grid { grid-template-columns: 1fr; } }
+    .site-footer .wordmark { color: var(--cream); margin-bottom: 0.9rem; }
+    .site-footer h3 { color: var(--cream); font-size: 1.05rem; margin-bottom: 0.8rem; font-family: var(--font-body); }
+    .site-footer ul { list-style: none; }
+    .site-footer li + li { margin-top: 0.45rem; }
+    .site-footer a { color: var(--gold); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+    .footer-legal { border-top: 1px solid rgba(250, 246, 239, 0.18); padding-top: 1.5rem; }
+    .footer-legal p { max-width: none; font-size: 0.85rem; }
+    .footer-legal p + p { margin-top: 0.5rem; }
+
+    /* ============ 12. MOTION & FOCUS REFINEMENTS ============ */
+    /* Scroll reveal: screen-only (print always shows everything), JS + motion-tolerant users only */
+    @media screen and (prefers-reduced-motion: no-preference) {
+      .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .js .reveal.revealed { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn, .bread-card { transition: none; }
+      .btn:hover, .bread-card:hover { transform: none; }
+    }
+    /* Brighter focus ring on dark backgrounds */
+    .skip-link:focus-visible,
+    .quote-band :focus-visible,
+    .contact-block :focus-visible,
+    .site-footer :focus-visible { outline-color: var(--gold); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ================= 3. HEADER / NAV ================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="wordmark" href="#top">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" fill="none">
+          <path d="M16 30V12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M16 13c-5 0-7-3-7-7 4 0 7 2 7 7Zm0 0c5 0 7-3 7-7-4 0-7 2-7 7Zm0-6c-4 0-6-3-6-6 4 0 6 2 6 6Zm0 0c4 0 6-3 6-6-4 0-6 2-6 6Z" fill="#D9A441"/>
+        </svg>
+        Ancient Grains
+      </a>
+      <nav aria-label="Main">
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M4 7h16M4 12h16M4 17h16"/>
+          </svg>
+          <span class="visually-hidden">Menu</span>
+        </button>
+        <ul class="nav-links" id="nav-menu">
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#why-einkorn">Why Einkorn</a></li>
+          <li><a href="#breads">The Breads</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a class="nav-cta" href="#order">Order Bread</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ================= 4. HERO ================= -->
+    <section class="hero" id="top" aria-labelledby="hero-heading">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Einkorn sourdough &bull; Baked at home in Connecticut</p>
+          <h1 id="hero-heading">Bread from the world's first wheat.</h1>
+          <p class="lede">Small-batch sourdough and pastries made with 100% einkorn — the ancient grain modern industry left behind — by a professional pastry chef, from a home oven.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#breads">See the Breads</a>
+            <a class="btn btn-ghost" href="#why-einkorn">Why Einkorn?</a>
+          </div>
+          <ul class="hero-badges" aria-label="What makes this bakery different">
+            <li>100% einkorn flour</li>
+            <li>Naturally leavened</li>
+            <li>Small batch</li>
+            <li>Chef-made</li>
+          </ul>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 200 260" fill="none" focusable="false">
+            <!-- wheat sheaf illustration -->
+            <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M100 250V96"/>
+              <path d="M62 250c4-52 14-96 38-134"/>
+              <path d="M138 250c-4-52-14-96-38-134"/>
+            </g>
+            <g fill="#D9A441">
+              <path d="M100 100c-16 0-24-10-24-26 13 0 24 8 24 26Zm0 0c16 0 24-10 24-26-13 0-24 8-24 26Z"/>
+              <path d="M100 74c-14 0-21-9-21-23 12 0 21 7 21 23Zm0 0c14 0 21-9 21-23-12 0-21 7-21 23Z"/>
+              <path d="M100 50c-12 0-18-8-18-20 10 0 18 6 18 20Zm0 0c12 0 18-8 18-20-10 0-18 6-18 20Z"/>
+              <path d="M100 28c-9 0-14-6-14-16 8 0 14 5 14 16Zm0 0c9 0 14-6 14-16-8 0-14 5-14 16Z"/>
+              <path d="M65 122c-13-4-17-14-13-28 11 3 17 12 13 28Zm0 0c13 4 22-1 26-15-11-3-22 1-26 15Z" opacity="0.75"/>
+              <path d="M135 122c13-4 17-14 13-28-11 3-17 12-13 28Zm0 0c-13 4-22-1-26-15 11-3 22 1 26 15Z" opacity="0.75"/>
+            </g>
+            <path d="M58 250h84" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M76 196h48m-52 18h56" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 5. OUR STORY ================= -->
+    <section class="section section-alt" id="story" aria-labelledby="story-heading">
+      <div class="container split">
+        <div class="prose reveal">
+          <p class="eyebrow">Our Story</p>
+          <h2 id="story-heading">A pastry chef, a home oven, and one stubborn grain.</h2>
+          <p>Will has spent his career as a professional chef and pastry chef. Somewhere between restaurant kitchens and thousands of loaves, he found einkorn — the original wheat, unchanged for ten thousand years — and couldn't understand why almost nobody was baking with it.</p>
+          <p>The answer, it turned out, wasn't flavor or nutrition. Einkorn lost out because it's harder to grow, harder to mill, and harder to bake with at industrial speed. The food industry chose the grain that fit the machines. We've been eating the consequences ever since.</p>
+          <p>Ancient Grains is Will's answer: a small home bakery doing the slow thing on purpose. Real sourdough. One ancient grain. And a standing invitation to learn why it matters.</p>
+        </div>
+        <div class="split-art reveal" aria-hidden="true">
+          <svg viewBox="0 0 200 200" fill="none" focusable="false">
+            <!-- sourdough boule with scoring -->
+            <path d="M30 138c0-40 31-70 70-70s70 30 70 70" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M22 138h156c0 18-14 30-30 30H52c-16 0-30-12-30-30Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M64 92c22-16 50-16 72 0" stroke="#D9A441" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M56 110c28-20 60-20 88 0" stroke="#D9A441" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M78 76c14-8 30-8 44 0" stroke="#D9A441" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M100 30v14M72 40l6 12M128 40l-6 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 6. WHY EINKORN ================= -->
+    <section class="section" id="why-einkorn" aria-labelledby="why-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Why Einkorn</p>
+          <h2 id="why-heading">The wheat we ate for 10,000 years — until we didn't.</h2>
+          <p class="lede">Einkorn is the oldest cultivated wheat on Earth, and the only one that was never hybridized. Here's what changed, and why we think it's worth going back.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="info-card reveal">
+            <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="20" cy="20" r="15"/>
+              <path d="M20 11v9l6 4"/>
+            </svg>
+            <h3>The original grain</h3>
+            <p>Einkorn (<em>Triticum monococcum</em>) was domesticated in the Fertile Crescent over 10,000 years ago. It's genetically the simplest wheat there is — two sets of chromosomes, where modern bread wheat carries six.</p>
+          </article>
+          <article class="info-card reveal">
+            <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 30c6-2 8-8 8-14 4 2 6 6 6 10 3-1 5-4 5-8 5 3 9 8 9 12H6Z"/>
+              <path d="M6 34h28"/>
+            </svg>
+            <h3>What changed</h3>
+            <p>Twentieth-century wheat was bred for yield, uniformity, and machine baking — not nutrition or flavor. Then roller mills stripped away the bran and germ, leaving fast-digesting refined starch. Bread got cheaper, softer, and emptier.</p>
+          </article>
+          <article class="info-card reveal">
+            <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M20 34V16"/>
+              <path d="M20 18c-5 0-8-3-8-8 4 0 8 3 8 8Zm0 0c5 0 8-3 8-8-4 0-8 3-8 8Z" fill="#D9A441" stroke="none"/>
+              <path d="M12 34h16"/>
+            </svg>
+            <h3>What einkorn kept</h3>
+            <p>Because it was never bred for industry, einkorn still bakes, tastes, and nourishes the way wheat used to — a golden crumb, a sweet nutty flavor, and a nutritional profile modern flour can't match.</p>
+          </article>
+        </div>
+
+        <div class="facts reveal" role="list" aria-label="Einkorn nutrition facts">
+          <div class="fact" role="listitem">
+            <h3>More protein</h3>
+            <p>Published compositional analyses consistently find einkorn higher in protein than modern bread wheat — commonly around 25&ndash;30% more.</p>
+          </div>
+          <div class="fact" role="listitem">
+            <h3>Rich in carotenoids</h3>
+            <p>Einkorn is one of the best wheat sources of lutein, the carotenoid that gives its flour a golden color — several times the level found in modern wheat.</p>
+          </div>
+          <div class="fact" role="listitem">
+            <h3>More minerals</h3>
+            <p>Studies report higher levels of several essential minerals — including zinc, iron, and phosphorus — compared with common wheat.</p>
+          </div>
+          <div class="fact" role="listitem">
+            <h3>A simpler gluten</h3>
+            <p>Einkorn's gluten is structurally different: it lacks the D-genome proteins found in modern wheat. Some people who find conventional bread hard on their stomach tell us einkorn sits easier — the science here is still young, so we call that what it is: promising, and anecdotal.</p>
+          </div>
+          <div class="fact" role="listitem">
+            <h3>Slow sourdough, on top</h3>
+            <p>Every loaf is naturally leavened for 18+ hours. Slow, wild fermentation is how bakers prepared grain for millennia — and along the way it partially breaks down starches and phytic acid.</p>
+          </div>
+          <div class="fact" role="listitem">
+            <h3>Nothing else</h3>
+            <p>Flour, water, salt, and time. No dough conditioners, no preservatives, no enrichment needed — the grain brings its own.</p>
+          </div>
+        </div>
+
+        <p class="fine-print">We're bakers, not doctors. Nothing on this page is medical advice, and no bread — however ancient the wheat — treats or prevents any disease. If you have a health condition, talk to your physician.</p>
+
+        <div class="honest-box reveal">
+          <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 36 34H4L20 6Z"/>
+            <path d="M20 17v8"/>
+            <circle cx="20" cy="29.5" r="0.5" fill="currentColor"/>
+          </svg>
+          <div>
+            <h3>The honest part: einkorn is not gluten-free.</h3>
+            <p>Einkorn contains gluten — a different, older form of it, but gluten all the same. If you have celiac disease or a wheat allergy, our bread is <strong>not safe for you</strong>. We'd rather lose a sale than mislead you; that's the whole point of this bakery.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 7. PULL QUOTE ================= -->
+    <section class="quote-band" aria-label="A word from the baker">
+      <div class="container">
+        <blockquote>
+          <p>&ldquo;Nobody gave up on einkorn because it was worse. Industry gave up on it because it was <strong>slower</strong>.&rdquo;</p>
+          <cite>&mdash; Will, the baker</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ================= 8. THE BREADS ================= -->
+    <section class="section" id="breads" aria-labelledby="breads-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">The Breads</p>
+          <h2 id="breads-heading">Baked slow. Sold fresh. Gone by noon.</h2>
+          <p class="lede">Everything below is 100% einkorn — including the sourdough starter. The lineup rotates with the seasons; the weekly bake list goes out before each bake day.</p>
+        </div>
+
+        <div class="bread-grid">
+          <article class="bread-card reveal">
+            <div class="card-media" aria-hidden="true">
+              <svg viewBox="0 0 120 90" fill="none" focusable="false" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 62c0-22 19-38 42-38s42 16 42 38"/>
+                <path d="M12 62h96c0 10-8 16-17 16H29c-9 0-17-6-17-16Z"/>
+                <path d="M40 42c12-9 28-9 40 0M46 32c8-5 20-5 28 0" stroke="#D9A441"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-tag">Sourdough</span>
+              <h3>Einkorn Country Boule</h3>
+              <p>The flagship. 100% einkorn, naturally leavened 18+ hours, baked dark. Golden crumb, deep crust, sweet and nutty.</p>
+              <span class="card-price">$12</span>
+            </div>
+          </article>
+
+          <article class="bread-card reveal">
+            <div class="card-media" aria-hidden="true">
+              <svg viewBox="0 0 120 90" fill="none" focusable="false" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 68V44c0-6 5-11 11-11h54c6 0 11 5 11 11v24"/>
+                <path d="M18 68h84"/>
+                <path d="M33 33c2-7 9-12 27-12s25 5 27 12" stroke="#D9A441"/>
+                <path d="M44 21v-4m16 3v-5m16 6v-4" stroke="#D9A441"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-tag">Sandwich Loaf</span>
+              <h3>Honey Einkorn Pan Loaf</h3>
+              <p>A soft, even crumb made for sandwiches and toast, sweetened with a touch of local honey. The gateway loaf.</p>
+              <span class="card-price">$10</span>
+            </div>
+          </article>
+
+          <article class="bread-card reveal">
+            <div class="card-media" aria-hidden="true">
+              <svg viewBox="0 0 120 90" fill="none" focusable="false" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="18" y="28" width="84" height="40" rx="8"/>
+                <circle cx="40" cy="44" r="2.5" fill="#D9A441" stroke="none"/>
+                <circle cx="62" cy="52" r="2.5" fill="#D9A441" stroke="none"/>
+                <circle cx="84" cy="42" r="2.5" fill="#D9A441" stroke="none"/>
+                <circle cx="52" cy="38" r="2.5" fill="#D9A441" stroke="none"/>
+                <circle cx="74" cy="60" r="2.5" fill="#D9A441" stroke="none"/>
+                <path d="M30 58c3-2 6-2 9 0m42-24c3-2 6-2 9 0" stroke="#D9A441"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-tag">Sourdough</span>
+              <h3>Rosemary &amp; Sea Salt Focaccia</h3>
+              <p>Einkorn focaccia, olive-oil rich, dimpled and scattered with fresh rosemary and flaky salt.</p>
+              <span class="card-price">$11</span>
+            </div>
+          </article>
+
+          <article class="bread-card reveal">
+            <div class="card-media" aria-hidden="true">
+              <svg viewBox="0 0 120 90" fill="none" focusable="false" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M60 45m-28 0a28 28 0 1 0 56 0 28 28 0 1 0-56 0"/>
+                <path d="M60 45c-10-2-14-8-12-18 8 2 13 8 12 18Zm0 0c2-10 8-14 18-12-2 8-8 13-18 12Zm0 0c-8 6-15 5-21-2 7-5 14-4 21 2Zm0 0c9 3 12 9 9 18-8-3-11-10-9-18Z" stroke="#D9A441"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-tag">Pastry</span>
+              <h3>Einkorn Cinnamon Rolls</h3>
+              <p>A pastry chef's cinnamon roll on ancient wheat: soft einkorn dough, dark cinnamon swirl, cream glaze. Half dozen.</p>
+              <span class="card-price">$14</span>
+            </div>
+          </article>
+
+          <article class="bread-card reveal">
+            <div class="card-media" aria-hidden="true">
+              <svg viewBox="0 0 120 90" fill="none" focusable="false" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 58c8-18 26-30 46-30s38 12 46 30c-8 10-26 16-46 16S22 68 14 58Z"/>
+                <path d="M38 44l10 12m6-16l10 14m8-12l8 10" stroke="#D9A441"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-tag">Sourdough</span>
+              <h3>Walnut &amp; Raisin Batard</h3>
+              <p>The weekend loaf: toasted walnuts and plump raisins folded through slow-fermented einkorn dough.</p>
+              <span class="card-price">$13</span>
+            </div>
+          </article>
+
+          <article class="bread-card reveal">
+            <div class="card-media" aria-hidden="true">
+              <svg viewBox="0 0 120 90" fill="none" focusable="false" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="22" y="24" width="76" height="48" rx="6"/>
+                <path d="M22 40h76M60 40v32"/>
+                <path d="M36 32c4-3 8-3 12 0m24 16c4-3 8-3 12 0m-46 12c4-3 8-3 12 0" stroke="#D9A441"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-tag">Chef's Choice</span>
+              <h3>Rotating Pastry Box</h3>
+              <p>Whatever the pastry chef is excited about this week — scones, galettes, morning buns — all einkorn, always seasonal.</p>
+              <span class="card-price">$18</span>
+            </div>
+          </article>
+        </div>
+
+        <p class="menu-note">Menu and prices are placeholders while the bakery gets rolling &mdash; the real weekly bake list will live here.</p>
+
+        <div class="gluten-strip reveal">
+          <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 36 34H4L20 6Z"/>
+            <path d="M20 17v8"/>
+            <circle cx="20" cy="29.5" r="0.5" fill="currentColor"/>
+          </svg>
+          <p><strong>Allergy note:</strong> every item contains <strong>wheat and gluten</strong>. Einkorn is not gluten-free and is not safe for celiac disease or wheat allergy. Baked in a home kitchen that also uses eggs, dairy, and tree nuts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 9. HOW TO ORDER ================= -->
+    <section class="section section-alt" id="order" aria-labelledby="order-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">How to Order</p>
+          <h2 id="order-heading">No carts, no checkout &mdash; just tell us what you want.</h2>
+          <p class="lede">We're a small cottage bakery, so ordering works the old-fashioned way. Online ordering is coming later; for now it's three easy steps.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step reveal">
+            <h3>Get on the list</h3>
+            <p>Email, call, or message us on Instagram and we'll add you to the weekly bake list &mdash; what's baking, and when.</p>
+          </div>
+          <div class="step reveal">
+            <h3>Claim your loaves</h3>
+            <p>Reply with what you'd like by Wednesday night. Everything is baked to order, so nothing sits and nothing is wasted.</p>
+          </div>
+          <div class="step reveal">
+            <h3>Pick up fresh</h3>
+            <p>Pick up on bake day &mdash; Fridays &mdash; still warm if you time it right. Pickup is local to Hartford County, Connecticut.</p>
+          </div>
+        </div>
+
+        <div class="contact-block reveal">
+          <h3>Ready for real bread?</h3>
+          <p>Reach out and we'll get you on this week's bake list. Placeholder contact details below &mdash; real ones coming with the launch.</p>
+          <p>And one honest reminder before you order: everything we bake contains wheat and gluten.</p>
+          <ul class="contact-lines">
+            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+            <li><a href="tel:+18605550134">(860) 555-0134</a></li>
+            <li><a href="https://www.instagram.com/" rel="noopener noreferrer" target="_blank">@yourbakeryhandle<span class="visually-hidden"> (opens Instagram in a new tab)</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 10. FAQ ================= -->
+    <section class="section" id="faq" aria-labelledby="faq-heading">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">FAQ</p>
+          <h2 id="faq-heading">Fair questions, straight answers.</h2>
+        </div>
+        <div class="faq-list reveal">
+          <details>
+            <summary>Is einkorn gluten-free?</summary>
+            <p><strong>No.</strong> Einkorn contains gluten. Its gluten is structurally different from modern wheat's and some people report tolerating it better, but if you have celiac disease or a wheat allergy, einkorn is not safe for you &mdash; full stop.</p>
+          </details>
+          <details>
+            <summary>Why does einkorn bread cost more than supermarket bread?</summary>
+            <p>Einkorn yields a fraction of what modern wheat does per acre, the grain has a tight hull that needs extra processing, and very few farms grow it. Add slow natural fermentation and hand-shaping, and each loaf simply takes more of everything &mdash; land, time, and labor. You're tasting where the money went.</p>
+          </details>
+          <details>
+            <summary>What does einkorn bread taste like?</summary>
+            <p>Sweeter and nuttier than regular wheat, with a golden-colored crumb from its natural carotenoids. The texture is a touch denser and more tender than fluffy commercial bread &mdash; closer to what bread tasted like for most of human history.</p>
+          </details>
+          <details>
+            <summary>Is everything really 100% einkorn?</summary>
+            <p>Yes &mdash; including the sourdough starter itself. No blending with modern wheat flour to make the dough easier to handle. It's harder to bake this way, which is exactly why almost nobody does it.</p>
+          </details>
+          <details>
+            <summary>How should I store the bread?</summary>
+            <p>Cut-side down on the counter under a towel for 2&ndash;3 days, or slice and freeze &mdash; einkorn sourdough freezes and re-toasts beautifully. Please don't refrigerate it; the fridge stales bread faster.</p>
+          </details>
+          <details>
+            <summary>Do you ship?</summary>
+            <p>Not yet. As a Connecticut cottage-food bakery we sell locally, with pickup on bake days. If demand grows, a bigger kitchen &mdash; and shipping &mdash; may follow.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= 11. FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <span class="wordmark">
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" fill="none">
+              <path d="M16 30V12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M16 13c-5 0-7-3-7-7 4 0 7 2 7 7Zm0 0c5 0 7-3 7-7-4 0-7 2-7 7Zm0-6c-4 0-6-3-6-6 4 0 6 2 6 6Zm0 0c4 0 6-3 6-6-4 0-6 2-6 6Z" fill="#D9A441"/>
+            </svg>
+            Ancient Grains
+          </span>
+          <p>Small-batch einkorn sourdough, baked at home in Connecticut by a professional pastry chef. Real bread, from the first wheat.</p>
+        </div>
+        <nav aria-label="Footer">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="#story">Our Story</a></li>
+            <li><a href="#why-einkorn">Why Einkorn</a></li>
+            <li><a href="#breads">The Breads</a></li>
+            <li><a href="#order">How to Order</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h3>Contact</h3>
+          <ul>
+            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+            <li><a href="tel:+18605550134">(860) 555-0134</a></li>
+            <li>Hartford County, CT</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <!-- Placeholder disclosure shaped like Connecticut's cottage food statement.
+             VERIFY the current required wording with the CT Dept. of Consumer
+             Protection before launch. -->
+        <p>Made in a home kitchen exempt from state licensing and inspection. This product may contain allergens, including wheat, eggs, dairy, and tree nuts.</p>
+        <p>&copy; <span id="year">2026</span> Ancient Grains. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= 12. SCRIPT (progressive enhancement only) ================= -->
+  <script>
+    (function () {
+      // Everything below is an enhancement; the site is fully usable without it.
+      document.documentElement.classList.add('js');
+
+      // Mobile nav toggle
+      var toggle = document.querySelector('.nav-toggle');
+      var menu = document.getElementById('nav-menu');
+      if (toggle && menu) {
+        toggle.addEventListener('click', function () {
+          var open = menu.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', String(open));
+        });
+        // Close the menu after choosing a section, and on Escape
+        menu.addEventListener('click', function (e) {
+          if (e.target.closest('a')) {
+            menu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && menu.classList.contains('open')) {
+            menu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.focus();
+          }
+        });
+      }
+
+      // Scroll reveal — skipped entirely for users who prefer reduced motion
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var reveals = document.querySelectorAll('.reveal');
+      if (!reduceMotion && 'IntersectionObserver' in window && reveals.length) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach(function (el) { io.observe(el); });
+      } else {
+        // No observer support or reduced motion: show everything immediately
+        reveals.forEach(function (el) { el.classList.add('revealed'); });
+      }
+
+      // Copyright year (static 2026 fallback already in the markup)
+      var year = document.getElementById('year');
+      if (year) { year.textContent = String(new Date().getFullYear()); }
+    })();
+  </script>
+</body>
+</html>
