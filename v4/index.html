@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- charset must land inside the first 1024 bytes, so it goes ahead of the
+       header comment below. Do not move it down. -->
+  <meta charset="UTF-8">
+<!--
+  ============================================================================
+  EINKORN BAKERY WEBSITE — v4 "Overnight"  (dark)
+  ============================================================================
+  A fourth, independent design direction. v1, v2 and v3 are untouched; all four
+  are published so Will can compare. Same content, four visual languages:
+    v1 = illustrated and traditional, cream and gold
+    v2 = minimal and editorial, paper and ink
+    v3 = bold and graphic, bright rounded color panels
+    v4 = warm dark, atmospheric, built around a timeline   <- this one
+
+  THE IDEA
+    The site is set during the overnight ferment, because that is literally
+    when this bread is made: mixed at 20:00, baked at 04:30, on the counter by
+    07:00. So the theme is not "dark mode" applied to a light design -- the
+    dark is the subject. A warm ember glow behind the hero stands in for the
+    oven, and the signature structural device is a vertical TIMELINE SPINE
+    that carries the "why slow" story that v1-v3 told as prose or cards.
+
+  DARK-MODE RULES THAT ARE LOAD-BEARING HERE
+    * Light text on a dark ground optically thickens (halation), so the body
+      face is loaded at ONE regular weight and nothing sets a heavier one.
+    * NEVER fade small text with opacity to make it "secondary" -- use the
+      --crumb-mute token, which is measured. A 75% fade is how v3 shipped a
+      3.59:1 failure that looked completely fine on screen.
+    * A muted border must never be the thing that identifies a control: the
+      warm browns measure 1.4-2.9:1 against the page, under the 3:1 non-text
+      minimum. Controls are outlined in --ember (9.05:1). Muted lines are for
+      decorative dividers only, where 1.4.11 does not apply.
+
+  COLOR CONTRACT (measured, do not eyeball changes)
+    crumb/night 16.62   crumb/night-3 14.52   mute/night 7.94   mute/night-3 6.94
+    ember/night 9.05    ember/night-3 7.91    ember-soft/night 12.41
+    night/ember 9.05 (button label)           ember focus ring on night 9.05
+
+  TABLE OF CONTENTS
+    1. <head>      - meta, favicon, JSON-LD, fonts
+    2. Styles      - tokens, base, then one block per section, then motion
+    3. Header      - sticky bar + scroll progress line
+    4. Hero        - ember glow, photo slot
+    5. The Overnight - the timeline spine
+    6. The Grain   - prose, three figures, the gluten disclaimer
+    7. The Bread   - numbered list, allergy note
+    8. The Baker   - portrait slot, pull quote
+    9. Order       - three steps, contact
+   10. Questions   - native <details>, no JS
+   11. Footer      - cottage-food disclosure, credits
+   12. Script      - reveal, progress line, header state. Enhancement only.
+
+  FONTS - one external request. 48.9KB latin, the lightest of the four sites.
+    Instrument Serif 400 (display) + Karla 400 (text) + IBM Plex Mono 400
+    (times, prices, labels). EACH FAMILY IS REQUESTED AT ONE WEIGHT: asking for
+    a second makes Google serve a variable file instead (Karla alone goes
+    13KB -> 24KB per weight). So nothing may set font-weight anywhere -- <strong>
+    is restyled onto the mono face rather than asking Karla for a bold it does
+    not have, which would render as synthetic faux-bold.
+
+  RENAMING THE BAKERY
+    The brand name is the exact, case-sensitive string "Ancient Grains",
+    appearing ONLY in visible text, metadata, and this comment - never in class
+    names, IDs, anchors, or CSS. The README gives the exact count for this file.
+
+  PLACEHOLDERS TO REPLACE BEFORE LAUNCH
+    - hello@example.com            (order email; also the mailto: links)
+    - (860) 555-0134               (phone; also the tel:+18605550134 links)
+    - @yourbakeryhandle            (Instagram; link points at instagram.com)
+    - Hartford County, Connecticut (pickup area)
+    - Fridays / Wednesday          (bake day, order deadline)
+    - $12 / $10 / $13 / $18        (all four prices)
+    - The overnight timeline times are illustrative, not Will's real schedule
+    - Cottage-food footer statement: verify current CT DCP wording
+    - The two photo slots (hero, baker portrait)
+  ============================================================================
+-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0E0C0A">
+  <title>Ancient Grains &mdash; 100% Einkorn Sourdough, Baked Overnight in Connecticut</title>
+  <meta name="description" content="Ancient Grains is a small home bakery in Connecticut baking sourdough and pastry with 100% einkorn: mixed at night, baked before dawn, sold the same morning.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E0C0A'/%3E%3Cg fill='none' stroke='%23E8A33D' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M16 27V9'/%3E%3Cpath d='M16 12c-4.2 0-6.5-2.3-6.5-6.5 4.2 0 6.5 2.3 6.5 6.5Zm0 0c4.2 0 6.5-2.3 6.5-6.5-4.2 0-6.5 2.3-6.5 6.5Z'/%3E%3Cpath d='M16 21c-4.2 0-6.5-2.3-6.5-6.5 4.2 0 6.5 2.3 6.5 6.5Zm0 0c4.2 0 6.5-2.3 6.5-6.5-4.2 0-6.5 2.3-6.5 6.5Z'/%3E%3C/g%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&amp;family=Karla:wght@400&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Bakery",
+    "name": "Ancient Grains",
+    "description": "Home bakery specializing in 100% einkorn sourdough bread and pastry.",
+    "address": { "@type": "PostalAddress", "addressRegion": "CT", "addressCountry": "US" }
+  }
+  </script>
+
+  <style>
+  /* ===================== 2a. TOKENS ====================================== */
+  :root {
+    color-scheme: dark;            /* dark scrollbars and form controls */
+
+    --night:      #0E0C0A;         /* page */
+    --night-2:    #17130E;         /* raised bands */
+    --night-3:    #211B14;         /* cards */
+    --crumb:      #F4ECDC;         /* primary text */
+    --crumb-mute: #AFA491;         /* secondary text - measured, not an opacity */
+    --ember:      #E8A33D;         /* accent, and every control outline */
+    --ember-soft: #F5C77E;
+    --line:       #33291E;         /* DECORATIVE dividers only (1.37:1) */
+
+    --display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+    --text:    "Karla", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:    "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+    --page:  1160px;
+    --band:  clamp(4.5rem, 10vw, 9rem);
+    --measure: 34rem;
+  }
+
+  /* ===================== 2b. BASE ======================================== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 6rem; }
+
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--crumb);
+    font-family: var(--text);
+    font-size: 1.0625rem;
+    line-height: 1.7;              /* a touch open: light-on-dark needs air */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 400;              /* the only weight loaded */
+    margin: 0;
+    line-height: 1.03;
+    letter-spacing: -0.01em;
+    color: var(--crumb);
+    text-wrap: balance;
+  }
+  h1 { font-size: clamp(3rem, 8vw, 6rem); }
+  h2 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
+  h3 { font-size: 1.5rem; line-height: 1.15; }
+
+  p { margin: 0 0 1.05em; }
+  p:last-child { margin-bottom: 0; }
+
+  /* Karla ships at 400 only, so a bold here would be synthesized. Emphasis
+     borrows the mono face instead, tinted: TWO cues, shape and color, so it
+     does not depend on color alone (SC 1.4.1). Compared against mono-only
+     (too flat to read as emphasis), color-only, and an ember underline --
+     the underline looked like a link, which is the last thing an allergy
+     disclaimer should look like. */
+  strong {
+    font-family: var(--mono); font-size: 0.9em; letter-spacing: -0.02em;
+    color: var(--ember-soft);
+    /* ⚠ REQUIRED. The UA default for <strong> is 700, and the mono face is
+       loaded at 400 only -- without this it renders as synthetic faux-bold. */
+    font-weight: 400;
+  }
+
+  a { color: var(--ember); text-underline-offset: 0.22em; }
+  a:hover { color: var(--ember-soft); }
+
+  img, svg { display: block; max-width: 100%; }
+
+  :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; border-radius: 3px; }
+
+  .wrap { width: min(100% - 2.5rem, var(--page)); margin-inline: auto; }
+  .band { padding-block: var(--band); }
+  .band + .band { border-top: 1px solid var(--line); }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ember);           /* a token, never an opacity fade */
+    margin: 0 0 1.3rem;
+  }
+  .lede { font-size: clamp(1.08rem, 1.5vw, 1.3rem); line-height: 1.6; max-width: var(--measure); color: var(--crumb-mute); }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  .skip {
+    position: absolute; left: 1rem; top: -5rem; z-index: 90;
+    background: var(--ember); color: var(--night);
+    padding: 0.75rem 1.15rem; border-radius: 4px;
+    font-family: var(--mono); font-size: 0.9rem; text-decoration: none;
+  }
+  .skip:focus { top: 1rem; }
+
+  /* Controls are outlined in --ember (9.05:1). A muted brown border would be
+     1.4-2.9:1 against the page and would fail WCAG 1.4.11. */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 3.1rem; padding: 0 1.7rem;
+    border: 1px solid var(--ember); border-radius: 999px;
+    font-family: var(--mono); font-size: 0.9rem; letter-spacing: 0.02em;
+    text-decoration: none; text-align: center;
+    /* No `white-space: nowrap`. Measured at 320px, the longest label leaves only
+       7px of slack once the WCAG text-spacing override is applied -- it passes,
+       but nowrap would make a slightly longer label overflow with no way to
+       break. min-height (not height) means wrapping is safe. */
+    transition: background-color 0.18s ease, color 0.18s ease;
+  }
+  .btn-solid { background: var(--ember); color: var(--night); }
+  .btn-solid:hover { background: var(--ember-soft); border-color: var(--ember-soft); color: var(--night); }
+  .btn-ghost { background: transparent; color: var(--ember); }
+  .btn-ghost:hover { background: var(--ember); color: var(--night); }
+
+  /* Photo slots. Replace the whole .frame contents with <img>; see README. */
+  .frame {
+    margin: 0; background: var(--night-3);
+    border: 1px solid var(--line); border-radius: 6px;
+    display: grid; place-items: center; overflow: hidden;
+    color: var(--crumb-mute);
+  }
+  .frame > img { width: 100%; height: 100%; object-fit: cover; }
+  .frame-tall { aspect-ratio: 4 / 5; }
+  .frame-note {
+    display: grid; justify-items: center; gap: 0.9rem; padding: 1.5rem;
+    font-family: var(--mono); font-size: 0.7rem;
+    letter-spacing: 0.18em; text-transform: uppercase; text-align: center;
+  }
+  .frame-note svg { width: 44px; height: 44px; }
+
+  /* ===================== 2c. HEADER ====================================== */
+  .site-header {
+    position: sticky; top: 0; z-index: 80;
+    background: color-mix(in srgb, var(--night) 86%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  @supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
+    .site-header { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  }
+  @supports not (background: color-mix(in srgb, red 50%, transparent)) {
+    .site-header { background: var(--night); }
+  }
+  .site-header.is-stuck { border-bottom-color: var(--line); }
+
+  /* Scroll progress. Decorative only -- it reports nothing that is not also
+     obvious from the scrollbar, so losing it costs nothing. */
+  .progress {
+    position: absolute; left: 0; bottom: -1px; height: 2px; width: 0%;
+    background: var(--ember); transition: width 0.1s linear;
+  }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; min-height: 4.5rem; }
+
+  .wordmark {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.005em;
+    color: var(--crumb); text-decoration: none; padding-block: 0.4rem;
+  }
+  .wordmark svg { width: 24px; height: 24px; flex: none; }
+  .wordmark:hover { color: var(--ember); }
+
+  .site-nav ul { display: flex; align-items: center; gap: clamp(0.9rem, 2vw, 1.9rem); list-style: none; margin: 0; padding: 0; }
+  .site-nav a {
+    display: inline-block; padding: 0.5rem 0.15rem;
+    font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--crumb-mute); text-decoration: none;
+  }
+  .site-nav a:hover { color: var(--ember); }
+  .site-nav .nav-cta {
+    color: var(--ember); border: 1px solid var(--ember);
+    border-radius: 999px; padding: 0.5rem 1.05rem;
+  }
+  .site-nav .nav-cta:hover { background: var(--ember); color: var(--night); }
+  /* Two-class selectors on purpose: `.site-nav ul` is class+element and would
+     otherwise out-specify a bare `.nav-wide`, showing both lists at once. */
+  .site-nav .nav-wide { display: none; }
+  @media (min-width: 50rem) {
+    .site-nav .nav-wide   { display: flex; }
+    .site-nav .nav-narrow { display: none; }
+  }
+
+  /* ===================== 2d. HERO ======================================== */
+  .hero { position: relative; overflow: hidden; padding-block: clamp(3.5rem, 8vw, 7rem) var(--band); }
+  /* The oven. A warm bloom behind the headline, pinned behind everything. */
+  .hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto -10%; height: 120%;
+    background: radial-gradient(ellipse 60% 55% at 72% 28%, rgba(232,163,61,0.20), rgba(232,163,61,0.05) 45%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .hero > .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); align-items: center; }
+  @media (min-width: 58rem) { .hero-grid { grid-template-columns: 1.1fr 0.9fr; } }
+  .hero h1 { margin-bottom: 1.5rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.3rem; }
+  .clockline {
+    font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em;
+    color: var(--crumb-mute); margin-top: 2.3rem;
+    padding-top: 1.2rem; border-top: 1px solid var(--line);
+  }
+  .clockline span { color: var(--ember); }
+
+  /* ===================== 2e. THE OVERNIGHT (timeline) ==================== */
+  .timeline { list-style: none; margin: clamp(2.5rem, 5vw, 4rem) 0 0; padding: 0; }
+  .timeline li { position: relative; padding: 0 0 clamp(2rem, 4vw, 3rem) 2.6rem; }
+  .timeline li:last-child { padding-bottom: 0; }
+  /* The connector is drawn PER ITEM, from under one dot to the top of the next,
+     rather than as a single spine on the <ol>. A spine anchored to the list's
+     content bottom overshot the last dot by ~120px -- the height of the final
+     item's own text -- leaving a line trailing into empty space. Suppressing it
+     on the last item is what makes that impossible by construction. */
+  .timeline li::after {
+    content: ""; position: absolute; left: 0.42rem; top: 1.55rem; bottom: -0.55rem;
+    width: 1px; background: #5C4C36;
+  }
+  .timeline li:last-child::after { content: none; }
+  .timeline li::before {
+    content: ""; position: absolute; left: 0; top: 0.55rem;
+    width: 0.85rem; height: 0.85rem; border-radius: 50%;
+    background: var(--night); border: 1px solid var(--ember);
+  }
+  .timeline li:first-child::before { background: var(--ember); }
+  .t-time { display: block; font-family: var(--mono); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--ember); }
+  .timeline h3 { margin: 0.5rem 0 0.4rem; }
+  .timeline p { color: var(--crumb-mute); max-width: 40rem; margin: 0; }
+
+  /* ===================== 2f. THE GRAIN =================================== */
+  .split { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); align-items: start; }
+  @media (min-width: 58rem) { .split { grid-template-columns: 1fr 1fr; } }
+
+  .figures { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); border-block: 1px solid var(--line); }
+  .figures li { background: var(--night); padding: 1.5rem 0.25rem; }
+  .fig-num { display: block; font-family: var(--display); font-size: clamp(2.3rem, 4.5vw, 3.2rem); line-height: 1; color: var(--ember-soft); }
+  .fig-label { display: block; margin-top: 0.5rem; color: var(--crumb-mute); font-size: 0.98rem; max-width: 26rem; }
+
+  .callout {
+    margin-top: clamp(2.75rem, 5vw, 4rem);
+    background: var(--night-3); border: 1px solid var(--ember);
+    border-radius: 6px; padding: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  .callout h3 { color: var(--ember-soft); margin-bottom: 0.6rem; }
+  .callout p { max-width: 52rem; }
+
+  /* ===================== 2g. THE BREAD =================================== */
+  .menu { list-style: none; margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; padding: 0; }
+  .menu li {
+    border-top: 1px solid var(--line);
+    padding: clamp(1.5rem, 3vw, 2.1rem) 0;
+    display: grid; gap: 0.3rem 1.5rem;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+  }
+  .menu li:last-child { border-bottom: 1px solid var(--line); }
+  .m-num { font-family: var(--mono); font-size: 0.8rem; color: var(--crumb-mute); letter-spacing: 0.1em; }
+  .menu h3 { grid-column: 2; }
+  .menu p { grid-column: 2; color: var(--crumb-mute); margin: 0; max-width: 44rem; font-size: 0.99rem; }
+  .price { grid-column: 3; grid-row: 1; font-family: var(--mono); font-size: 1rem; color: var(--ember); font-variant-numeric: tabular-nums; }
+  .menu-note { margin-top: 1.4rem; color: var(--crumb-mute); font-size: 0.92rem; }
+  .allergy {
+    margin-top: clamp(2rem, 4vw, 3rem); padding: 1.4rem 1.5rem;
+    background: var(--night-2); border-left: 2px solid var(--ember);
+    border-radius: 0 6px 6px 0; color: var(--crumb-mute); font-size: 0.98rem; max-width: 60rem;
+  }
+
+  /* ===================== 2h. THE BAKER =================================== */
+  /* Two classes on purpose: `.baker` and `.split` are both single-class, so this
+     would otherwise beat `.split` only by being declared later in the sheet --
+     reordering the stylesheet would silently revert the layout to 1fr 1fr. */
+  @media (min-width: 58rem) { .split.baker { grid-template-columns: 0.8fr 1.2fr; align-items: center; } }
+  /* figure + figcaption, not <cite>: per the HTML spec <cite> is the title of a
+     work, not the name of the person being quoted. */
+  .quote { margin: clamp(2rem, 4vw, 2.75rem) 0 0; padding-top: clamp(1.6rem, 3vw, 2.1rem); border-top: 1px solid var(--line); }
+  .quote blockquote { margin: 0; }
+  .quote blockquote p { font-family: var(--display); font-size: clamp(1.45rem, 2.6vw, 2rem); line-height: 1.2; color: var(--crumb); text-wrap: balance; }
+  .quote figcaption { margin-top: 1rem; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--crumb-mute); }
+
+  /* ===================== 2i. ORDER ======================================= */
+  .steps { list-style: none; margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; padding: 0; display: grid; gap: clamp(2rem, 4vw, 3rem); }
+  @media (min-width: 52rem) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .steps li { border-top: 1px solid var(--ember); padding-top: 1.3rem; }
+  .step-num { display: block; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--ember); margin-bottom: 0.8rem; }
+  .steps h3 { margin-bottom: 0.45rem; }
+  .steps p { color: var(--crumb-mute); margin: 0; font-size: 0.99rem; }
+
+  .contact { margin-top: clamp(2.75rem, 5vw, 4rem); display: grid; gap: 1.75rem; }
+  @media (min-width: 52rem) { .contact { grid-template-columns: 1fr 1fr; align-items: end; } }
+  .contact-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
+  .contact-lines a, .contact-lines .place {
+    display: inline-block; padding-block: 0.3rem;
+    font-family: var(--display); font-size: clamp(1.2rem, 2vw, 1.5rem);
+    text-decoration: none;
+  }
+  .contact-lines a:hover { text-decoration: underline; }
+  .contact-lines .place { color: var(--crumb-mute); font-family: var(--text); font-size: 1rem; }
+
+  /* ===================== 2j. QUESTIONS =================================== */
+  .faq { margin-top: clamp(2.25rem, 4vw, 3rem); max-width: 54rem; }
+  .faq details { border-top: 1px solid var(--line); }
+  .faq details:last-of-type { border-bottom: 1px solid var(--line); }
+  .faq summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    padding: 1.3rem 0;
+    font-family: var(--display); font-size: 1.35rem; color: var(--crumb);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { color: var(--ember); }
+  /* State is the GLYPH, not the color: a hue-only cue fails SC 1.4.1. */
+  .faq summary::after {
+    content: "+"; flex: none; font-family: var(--mono); font-size: 1.15rem;
+    line-height: 1; color: var(--ember);
+  }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details > p { padding: 0 0 1.4rem; margin: 0; color: var(--crumb-mute); max-width: 48rem; }
+
+  /* ===================== 2k. FOOTER ====================================== */
+  .site-footer { background: #0A0806; border-top: 1px solid var(--line); padding-block: clamp(3rem, 6vw, 5rem) 2.5rem; font-size: 0.95rem; }
+  .footer-grid { display: grid; gap: 2.5rem; }
+  @media (min-width: 52rem) { .footer-grid { grid-template-columns: 1.6fr 1fr 1fr; gap: 3rem; } }
+  .footer-grid p { margin-top: 1rem; max-width: 26rem; color: var(--crumb-mute); }
+  .site-footer h2 { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ember); margin-bottom: 1rem; }
+  .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
+  .footer-grid ul a, .footer-grid ul .foot-plain {
+    display: inline-block; padding-block: 0.3rem; text-decoration: none; color: var(--crumb-mute);
+  }
+  .footer-grid ul a:hover { color: var(--ember); text-decoration: underline; }
+  .footer-legal {
+    margin-top: clamp(2.75rem, 5vw, 4rem); padding-top: 1.6rem; border-top: 1px solid var(--line);
+    display: grid; gap: 0.8rem; font-size: 0.85rem; color: var(--crumb-mute);
+  }
+  .footer-legal p { max-width: 56rem; margin: 0; }
+
+  /* ===================== 2l. MOTION ====================================== */
+  .js .reveal { opacity: 0; transform: translateY(14px); }
+  .js .reveal.is-in { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,0.61,0.36,1); }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js .reveal { opacity: 1; transform: none; }
+    .js .reveal.is-in { transition: none; }
+    .progress { transition: none; }
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+  /* On paper the dark tokens are illegible: ember measures 2.16:1 and the muted
+     text 2.46:1 against white. Override the TOKENS, not each selector -- a rule
+     that sets `color:` directly beats an inherited body color, so patching only
+     `body` would leave every label, price, caption and legal line unreadable. */
+  @media print {
+    :root {
+      --night: #fff; --night-2: #fff; --night-3: #fff;
+      --crumb: #000; --crumb-mute: #333;
+      --ember: #000; --ember-soft: #000; --line: #bbb;
+    }
+    body { background: #fff; color: #000; }
+    .site-footer { background: #fff; }
+    .site-header, .frame, .hero::before { display: none; }
+  }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ===================== 3. HEADER ==================================== -->
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="#top">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M16 27V9"/>
+          <path d="M16 12c-4.2 0-6.5-2.3-6.5-6.5 4.2 0 6.5 2.3 6.5 6.5Zm0 0c4.2 0 6.5-2.3 6.5-6.5-4.2 0-6.5 2.3-6.5 6.5Z"/>
+          <path d="M16 21c-4.2 0-6.5-2.3-6.5-6.5 4.2 0 6.5 2.3 6.5 6.5Zm0 0c4.2 0 6.5-2.3 6.5-6.5-4.2 0-6.5 2.3-6.5 6.5Z"/>
+        </svg>
+        Ancient Grains
+      </a>
+
+      <nav class="site-nav" aria-label="Primary">
+        <ul class="nav-wide">
+          <li><a href="#overnight">Overnight</a></li>
+          <li><a href="#grain">Grain</a></li>
+          <li><a href="#bread">Bread</a></li>
+          <li><a href="#baker">Baker</a></li>
+          <li><a class="nav-cta" href="#order">Order</a></li>
+        </ul>
+        <ul class="nav-narrow">
+          <li><a class="nav-cta" href="#order">Order</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ===================== 4. HERO ==================================== -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Einkorn sourdough &middot; Connecticut</p>
+            <h1 id="hero-heading">The bread is made while you sleep.</h1>
+            <p class="lede">One hundred percent einkorn, mixed at night and baked before dawn by a professional pastry chef &mdash; because the oldest wheat on earth will not be hurried.</p>
+            <div class="hero-actions">
+              <a class="btn btn-solid" href="#order">Get on the bake list</a>
+              <a class="btn btn-ghost" href="#overnight">See the overnight</a>
+            </div>
+            <p class="clockline">Mixed <span>20:00</span> &nbsp;&middot;&nbsp; Baked <span>04:30</span> &nbsp;&middot;&nbsp; On the counter <span>07:00</span></p>
+          </div>
+
+          <figure class="frame frame-tall reveal">
+            <!-- PHOTO SLOT 1 - replace everything inside .frame with:
+                 <img src="hero.jpg" alt="A dark-baked einkorn boule cooling in a dim kitchen."> -->
+            <div class="frame-note">
+              <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 40c0-13 11-22 24-22s24 9 24 22"/>
+                <path d="M4 40h56c0 7-5 12-12 12H16C9 52 4 47 4 40Z"/>
+                <path d="M20 30c8-5 16-5 24 0"/>
+              </svg>
+              Hero photo
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 5. THE OVERNIGHT =========================== -->
+    <section class="band" id="overnight" aria-labelledby="overnight-heading">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">The Overnight</p>
+          <h2 id="overnight-heading">Eleven hours, mostly spent waiting.</h2>
+          <p class="lede" style="margin-top:1.4rem">Nothing here is fast. Einkorn ferments slowly and stays slack, so the schedule is built around the dough rather than the clock. Times are illustrative.</p>
+        </div>
+
+        <ol class="timeline reveal">
+          <li>
+            <span class="t-time">20:00</span>
+            <h3>Mix</h3>
+            <p>Flour, water, salt and a spoonful of starter that was itself fed this morning. No commercial yeast, no conditioners, nothing to speed it along.</p>
+          </li>
+          <li>
+            <span class="t-time">22:30</span>
+            <h3>Fold</h3>
+            <p>A few gentle folds, half an hour apart, to build what little structure einkorn will give you. Push it harder and the dough tears instead of tightening.</p>
+          </li>
+          <li>
+            <span class="t-time">02:00</span>
+            <h3>Shape</h3>
+            <p>Shaped by hand and set to rest cold. This is the hour that makes the flavor &mdash; the long, quiet part nobody sees.</p>
+          </li>
+          <li>
+            <span class="t-time">04:30</span>
+            <h3>Bake</h3>
+            <p>Scored and baked dark in a home oven, one batch at a time. The crust goes further than most people expect, and that is on purpose.</p>
+          </li>
+          <li>
+            <span class="t-time">07:00</span>
+            <h3>On the counter</h3>
+            <p>Cooled just enough to slice. Pickup starts here, and on a good week it is gone by noon.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== 6. THE GRAIN =============================== -->
+    <section class="band" id="grain" aria-labelledby="grain-heading">
+      <div class="wrap">
+        <div class="split">
+          <div class="reveal">
+            <p class="eyebrow">The Grain</p>
+            <h2 id="grain-heading">The wheat we ate for ten thousand years.</h2>
+            <p class="lede" style="margin-top:1.4rem">Einkorn is the oldest cultivated wheat on earth, and the only one never crossed, bred, or reworked into something else.</p>
+            <p style="margin-top:1.5rem;max-width:34rem">Modern wheat replaced it for reasons that had nothing to do with flavor. Einkorn yields less per acre, holds a stubborn hull, and its dough is slack and unfamiliar under a machine. The industry picked the grain that suited the equipment.</p>
+            <p style="max-width:34rem">We picked the other one, and then built the whole night around it.</p>
+          </div>
+
+          <ul class="figures reveal">
+            <li>
+              <span class="fig-num">10,000</span>
+              <span class="fig-label">years of people eating einkorn before anyone thought to improve it</span>
+            </li>
+            <li>
+              <span class="fig-num">100%</span>
+              <span class="fig-label">einkorn in every loaf, with no modern flour blended in to make it easier</span>
+            </li>
+            <li>
+              <span class="fig-num">3</span>
+              <span class="fig-label">ingredients &mdash; flour, water, salt. The fourth is time, and time is free</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="callout reveal">
+          <h3>Einkorn is not gluten-free.</h3>
+          <p>Einkorn contains gluten &mdash; an older, structurally different form of it, but gluten all the same. If you have celiac disease or a wheat allergy, our bread is <strong>not safe for you</strong>. We would rather lose a sale than mislead you. We are also bakers, not doctors: nothing here is medical advice.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 7. THE BREAD =============================== -->
+    <section class="band" id="bread" aria-labelledby="bread-heading">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">The Bread</p>
+          <h2 id="bread-heading">Baked slow. Sold fresh. Gone by noon.</h2>
+          <p class="lede" style="margin-top:1.4rem">A short list on purpose. It rotates with the season, and the week&rsquo;s real bake list goes out before every bake day.</p>
+        </div>
+
+        <ul class="menu reveal">
+          <li>
+            <span class="m-num">01</span>
+            <h3>Einkorn Country Boule</h3>
+            <span class="price">$12</span>
+            <p>The flagship. Naturally leavened eighteen hours and baked dark: golden crumb, deep crust, sweet and nutty.</p>
+          </li>
+          <li>
+            <span class="m-num">02</span>
+            <h3>Honey Einkorn Pan Loaf</h3>
+            <span class="price">$10</span>
+            <p>A soft, even crumb built for sandwiches and morning toast, with a spoonful of local honey. The gateway loaf.</p>
+          </li>
+          <li>
+            <span class="m-num">03</span>
+            <h3>Walnut &amp; Raisin Batard</h3>
+            <span class="price">$13</span>
+            <p>The weekend loaf. Toasted walnuts and plump raisins folded through slow-fermented einkorn dough.</p>
+          </li>
+          <li>
+            <span class="m-num">04</span>
+            <h3>Rotating Pastry Box</h3>
+            <span class="price">$18</span>
+            <p>Whatever the pastry chef is excited about that week &mdash; scones, galettes, morning buns. All einkorn, always seasonal.</p>
+          </li>
+        </ul>
+        <p class="menu-note">Lineup and prices are placeholders while the bakery gets rolling.</p>
+
+        <p class="allergy reveal"><strong>Allergy note:</strong> everything above contains <strong>wheat and gluten</strong>. Einkorn is not gluten-free and is not safe for celiac disease or wheat allergy. Baked in a home kitchen that also handles eggs, dairy, and tree nuts.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 8. THE BAKER =============================== -->
+    <section class="band" id="baker" aria-labelledby="baker-heading">
+      <div class="wrap split baker">
+        <figure class="frame frame-tall reveal">
+          <!-- PHOTO SLOT 2 - replace everything inside .frame with:
+               <img src="will.jpg" alt="Will shaping dough at his kitchen bench."> -->
+          <div class="frame-note">
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="32" cy="24" r="11"/>
+              <path d="M12 56c0-11 9-18 20-18s20 7 20 18"/>
+            </svg>
+            Portrait of Will
+          </div>
+        </figure>
+
+        <div class="reveal">
+          <p class="eyebrow">The Baker</p>
+          <h2 id="baker-heading">A pastry chef, a home oven, one stubborn grain.</h2>
+          <p style="margin-top:1.4rem">Will has spent his career in professional kitchens, most of it in pastry. Somewhere past the thousandth loaf he found einkorn &mdash; the original wheat, unchanged for ten thousand years &mdash; and could not work out why almost nobody was baking with it.</p>
+          <p>Ancient Grains is his answer: one small home bakery doing the slow thing deliberately, at the hours the dough demands.</p>
+
+          <figure class="quote">
+            <blockquote>
+              <p>&ldquo;Nobody gave up on einkorn because it was worse. Industry gave up on it because it was slower.&rdquo;</p>
+            </blockquote>
+            <figcaption>Will, the baker</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 9. ORDER =================================== -->
+    <section class="band" id="order" aria-labelledby="order-heading">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Order</p>
+          <h2 id="order-heading">No cart, no checkout. Just tell us what you want.</h2>
+        </div>
+
+        <ol class="steps reveal">
+          <li>
+            <span class="step-num">Step 01</span>
+            <h3>Get on the list</h3>
+            <p>Email, call, or send a message on Instagram and we will add you to the weekly bake list.</p>
+          </li>
+          <li>
+            <span class="step-num">Step 02</span>
+            <h3>Claim your loaves</h3>
+            <p>Reply with what you would like by Wednesday. Everything is baked to order, so nothing sits and nothing is wasted.</p>
+          </li>
+          <li>
+            <span class="step-num">Step 03</span>
+            <h3>Pick up fresh</h3>
+            <p>Collect on bake day, Fridays, still warm if you time it right. Pickup is local to Hartford County, Connecticut.</p>
+          </li>
+        </ol>
+
+        <div class="contact reveal">
+          <p class="lede" style="margin:0">Reach out and we will get you on this week&rsquo;s list. These details are placeholders &mdash; the real ones land with the launch.</p>
+          <ul class="contact-lines">
+            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+            <li><a href="tel:+18605550134">(860) 555-0134</a></li>
+            <li><a href="https://www.instagram.com/" rel="noopener noreferrer" target="_blank">@yourbakeryhandle<span class="visually-hidden"> (opens Instagram in a new tab)</span></a></li>
+            <li><span class="place">Pickup in Hartford County, Connecticut</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 10. QUESTIONS ============================== -->
+    <section class="band" id="questions" aria-labelledby="questions-heading">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Questions</p>
+          <h2 id="questions-heading">Fair questions, straight answers.</h2>
+        </div>
+
+        <div class="faq reveal">
+          <details>
+            <summary>Is einkorn gluten-free?</summary>
+            <p><strong>No.</strong> Einkorn contains gluten. Its gluten is structurally different from modern wheat&rsquo;s and some people report tolerating it better, but if you have celiac disease or a wheat allergy einkorn is not safe for you &mdash; full stop.</p>
+          </details>
+          <details>
+            <summary>Why does it cost more than supermarket bread?</summary>
+            <p>Einkorn yields a fraction of what modern wheat does per acre, its tight hull needs extra processing, and very few farms grow it. Add slow natural fermentation and hand shaping and each loaf simply takes more of everything &mdash; land, time, and labor.</p>
+          </details>
+          <details>
+            <summary>What does einkorn bread taste like?</summary>
+            <p>Sweeter and nuttier than regular wheat, with a golden crumb that comes from the grain&rsquo;s own carotenoids. The texture is a touch denser and more tender than fluffy commercial bread &mdash; closer to what bread was for most of human history.</p>
+          </details>
+          <details>
+            <summary>Do you ship?</summary>
+            <p>Not yet. As a Connecticut cottage-food bakery we sell locally, with pickup on bake days. If demand grows, a bigger kitchen &mdash; and shipping &mdash; may follow.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== 11. FOOTER =================================== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="wordmark" href="#top">
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M16 27V9"/>
+              <path d="M16 12c-4.2 0-6.5-2.3-6.5-6.5 4.2 0 6.5 2.3 6.5 6.5Zm0 0c4.2 0 6.5-2.3 6.5-6.5-4.2 0-6.5 2.3-6.5 6.5Z"/>
+              <path d="M16 21c-4.2 0-6.5-2.3-6.5-6.5 4.2 0 6.5 2.3 6.5 6.5Zm0 0c4.2 0 6.5-2.3 6.5-6.5-4.2 0-6.5 2.3-6.5 6.5Z"/>
+            </svg>
+            Ancient Grains
+          </a>
+          <p>Small-batch einkorn sourdough, baked overnight at home in Connecticut by a professional pastry chef.</p>
+        </div>
+
+        <nav aria-labelledby="footer-nav-heading">
+          <h2 id="footer-nav-heading">Explore</h2>
+          <ul>
+            <li><a href="#overnight">The Overnight</a></li>
+            <li><a href="#grain">The Grain</a></li>
+            <li><a href="#bread">The Bread</a></li>
+            <li><a href="#baker">The Baker</a></li>
+            <li><a href="#order">Order</a></li>
+            <li><a href="#questions">Questions</a></li>
+          </ul>
+        </nav>
+
+        <div>
+          <h2 id="footer-contact-heading">Contact</h2>
+          <ul aria-labelledby="footer-contact-heading">
+            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+            <li><a href="tel:+18605550134">(860) 555-0134</a></li>
+            <li><span class="foot-plain">Hartford County, CT</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-legal">
+        <!-- Placeholder disclosure shaped like Connecticut's cottage-food statement.
+             VERIFY the current required wording with the CT Department of Consumer
+             Protection before launch. -->
+        <p>Made in a home kitchen exempt from state licensing and inspection. This product may contain allergens, including wheat, eggs, dairy, and tree nuts. Einkorn is not gluten-free.</p>
+        <p>&copy; <span id="year">2026</span> Ancient Grains. All rights reserved.</p>
+        <p>Site designed and built by Jeremy Christman with Claude (Anthropic).</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== 12. SCRIPT (enhancement only) ================ -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Everything here is an enhancement. With JS off the page is complete:
+      // all content is visible, nav is anchor links, FAQ uses native <details>.
+
+      // Keep the copyright year current. Independent of the scroll work below,
+      // so it runs before that capability check.
+      var year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+
+      if (!("IntersectionObserver" in window)) return;
+      document.documentElement.classList.add("js");
+
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var revealables = document.querySelectorAll(".reveal");
+
+      if (reduce.matches) {
+        for (var i = 0; i < revealables.length; i++) revealables[i].classList.add("is-in");
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
+        revealables.forEach(function (el) { io.observe(el); });
+      }
+
+      var header = document.querySelector(".site-header");
+      if (!header) return;
+
+      // Hairline under the header once the page has scrolled at all.
+      var sentinel = document.createElement("div");
+      sentinel.setAttribute("aria-hidden", "true");
+      sentinel.style.cssText = "position:absolute;top:0;left:0;width:1px;height:1px;";
+      document.body.prepend(sentinel);
+      new IntersectionObserver(function (entries) {
+        header.classList.toggle("is-stuck", !entries[0].isIntersecting);
+      }).observe(sentinel);
+
+      // Scroll progress line. Purely decorative, and rAF-throttled so the
+      // scroll handler never does layout work more than once a frame.
+      var bar = document.getElementById("progress");
+      if (!bar) return;
+      var ticking = false;
+      function draw() {
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        var pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+        bar.style.width = (pct < 0 ? 0 : pct > 100 ? 100 : pct) + "%";
+        ticking = false;
+      }
+      window.addEventListener("scroll", function () {
+        if (!ticking) { ticking = true; window.requestAnimationFrame(draw); }
+      }, { passive: true });
+      window.addEventListener("resize", function () {
+        if (!ticking) { ticking = true; window.requestAnimationFrame(draw); }
+      }, { passive: true });
+      draw();
+    })();
+  </script>
+</body>
+</html>

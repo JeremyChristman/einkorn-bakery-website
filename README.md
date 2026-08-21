@@ -5,7 +5,7 @@ A one-page website mockup for Will's upcoming at-home einkorn bakery in Connecti
 **Status: v0.1 mockup — not launched.** The design and structure are done; the brand
 name, contact info, prices, and a few facts are placeholders (all listed below).
 
-> ### There are three designs in this repo
+> ### There are four designs in this repo
 >
 > This file documents **v1**, the design in `index.html` at the repo root.
 > Each is a separate, independent direction on the same content. None replaces
@@ -16,9 +16,10 @@ name, contact info, prices, and a few facts are placeholders (all listed below).
 > | **v1** | Cream and gold, illustrated | `index.html` | [`/`](https://jeremychristman.github.io/einkorn-bakery-website/) |
 > | **v2** | Paper and ink, minimal, editorial | [`v2/`](v2/README.md) | [`/v2/`](https://jeremychristman.github.io/einkorn-bakery-website/v2/) |
 > | **v3** | Bright color panels, bold and graphic | [`v3/`](v3/README.md) | [`/v3/`](https://jeremychristman.github.io/einkorn-bakery-website/v3/) |
+> | **v4** | Warm dark, atmospheric, timeline | [`v4/`](v4/README.md) | [`/v4/`](https://jeremychristman.github.io/einkorn-bakery-website/v4/) |
 >
-> If you rename the bakery, do it in **all three** files separately — the
-> occurrence counts differ (9 here, 8 in v2, 8 in v3).
+> If you rename the bakery, do it in **all four** files separately — the
+> occurrence counts differ (9 here, 8 in v2, 8 in v3, 8 in v4).
 
 > **Name ideas:** "Ancient Grains" is a placeholder, not a decision. *Einkorn*
 > literally means "one grain" in German, which is fertile naming territory —
