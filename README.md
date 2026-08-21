@@ -5,18 +5,20 @@ A one-page website mockup for Will's upcoming at-home einkorn bakery in Connecti
 **Status: v0.1 mockup — not launched.** The design and structure are done; the brand
 name, contact info, prices, and a few facts are placeholders (all listed below).
 
-> ### There are two designs in this repo
+> ### There are three designs in this repo
 >
-> This file documents **v1**, the design in `index.html` at the repo root, live at
-> `https://jeremychristman.github.io/einkorn-bakery-website/`.
+> This file documents **v1**, the design in `index.html` at the repo root.
+> Each is a separate, independent direction on the same content. None replaces
+> another; they exist to be compared. Each has its own README.
 >
-> **[`v2/`](v2/README.md) is a separate, independent design direction** — same
-> content, quieter and more typographic, live at
-> `https://jeremychristman.github.io/einkorn-bakery-website/v2/`. Neither one
-> replaces the other; they exist to be compared. v2 has its own README.
+> | | Look | Source | Live |
+> |---|---|---|---|
+> | **v1** | Cream and gold, illustrated | `index.html` | [`/`](https://jeremychristman.github.io/einkorn-bakery-website/) |
+> | **v2** | Paper and ink, minimal, editorial | [`v2/`](v2/README.md) | [`/v2/`](https://jeremychristman.github.io/einkorn-bakery-website/v2/) |
+> | **v3** | Bright color panels, bold and graphic | [`v3/`](v3/README.md) | [`/v3/`](https://jeremychristman.github.io/einkorn-bakery-website/v3/) |
 >
-> If you rename the bakery, do it in **both** files — the occurrence counts
-> differ (9 here, 8 in v2).
+> If you rename the bakery, do it in **all three** files separately — the
+> occurrence counts differ (9 here, 8 in v2, 8 in v3).
 
 > **Name ideas:** "Ancient Grains" is a placeholder, not a decision. *Einkorn*
 > literally means "one grain" in German, which is fertile naming territory —
