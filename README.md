@@ -5,6 +5,19 @@ A one-page website mockup for Will's upcoming at-home einkorn bakery in Connecti
 **Status: v0.1 mockup — not launched.** The design and structure are done; the brand
 name, contact info, prices, and a few facts are placeholders (all listed below).
 
+> ### There are two designs in this repo
+>
+> This file documents **v1**, the design in `index.html` at the repo root, live at
+> `https://jeremychristman.github.io/einkorn-bakery-website/`.
+>
+> **[`v2/`](v2/README.md) is a separate, independent design direction** — same
+> content, quieter and more typographic, live at
+> `https://jeremychristman.github.io/einkorn-bakery-website/v2/`. Neither one
+> replaces the other; they exist to be compared. v2 has its own README.
+>
+> If you rename the bakery, do it in **both** files — the occurrence counts
+> differ (9 here, 8 in v2).
+
 > **Name ideas:** "Ancient Grains" is a placeholder, not a decision. *Einkorn*
 > literally means "one grain" in German, which is fertile naming territory —
 > One Grain Bakery, Single Grain, First Wheat, etc. Final name is Will's call.
